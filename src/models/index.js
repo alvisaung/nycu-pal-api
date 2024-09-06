@@ -2,8 +2,16 @@ const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
 const config = require("../config/db.js").development;
-
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+let sequelize;
+try {
+  sequelize = new Sequelize(config.database, config.username, config.password, {
+    ...config,
+    logging: console.log, // This will log all SQL queries
+  });
+} catch (err) {
+  console.error("Unable to connect to the database:", err);
+  process.exit(1);
+}
 const db = {};
 
 fs.readdirSync(__dirname)
