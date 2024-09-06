@@ -1,7 +1,7 @@
 module.exports = {
   development: {
     username: "root",
-    password: "",
+    password: "I've100$",
     database: "nycu_pal",
     host: "127.0.0.1", // Use IP address instead of 'localhost'
     dialect: "mysql",
