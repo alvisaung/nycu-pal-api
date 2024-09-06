@@ -1,0 +1,32 @@
+module.exports = (sequelize, DataTypes) => {
+  const Member = sequelize.define(
+    "Member",
+    {
+      id: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      research_dir: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      img_url: DataTypes.STRING,
+      experiences: DataTypes.TEXT,
+      phone: DataTypes.STRING,
+      role: DataTypes.STRING,
+    },
+    {
+      tableName: "member",
+      timestamps: false,
+      indexes: [{ fields: ["id"] }],
+    }
+  );
+
+  return Member;
+};
