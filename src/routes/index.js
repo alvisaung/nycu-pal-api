@@ -13,7 +13,7 @@ const multer = require("multer");
 
 const upload = multer().none();
 
-router.use("/about-lab", aboutLabRoutes);
+router.use("/about-lab", upload, aboutLabRoutes);
 router.route("/events").get(eventsController.get).put(eventsController.createOrUpdate).delete(upload, eventsController.delete);
 router.route("/events-type").get(eventTypeController.get).put(upload, eventTypeController.createOrUpdate).delete(upload, eventTypeController.delete);
 router.route("/member").get(memberController.get).put(upload, memberController.createOrUpdate).delete(upload, memberController.delete);
