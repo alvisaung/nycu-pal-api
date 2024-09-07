@@ -32,15 +32,17 @@ const generalController = {
       return res.status(400).send("No files uploaded.");
     }
     const uploadedImages = [];
-    const file = req.file;
+    const baseUrl = "https://api.nycu-pal.com/api";
+    const relativePath = req.file;
+    const fullUrl = `${baseUrl}/${relativePath}`;
+
     const image = await Image.create({
       filename: file.filename,
-      url: file.path,
+      url: fullUrl,
       mimetype: file.mimetype,
       size: file.size,
     });
 
-    console.log("After");
     res.status(201).json({
       message: "Image uploaded successfully",
       image: image,
