@@ -33,7 +33,8 @@ const generalController = {
     }
     const uploadedImages = [];
     const baseUrl = "https://api.nycu-pal.com/api";
-    const relativePath = req.file;
+    const file = req.file;
+    const relativePath = file.path.replace(/\\/g, "/");
     const fullUrl = `${baseUrl}/${relativePath}`;
 
     const image = await Image.create({
