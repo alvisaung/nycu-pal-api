@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       is_img: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {
