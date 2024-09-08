@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
+      youtube_embed_url: DataTypes.TEXT,
     },
     {
       tableName: "research_topics",
