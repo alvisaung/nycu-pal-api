@@ -67,7 +67,9 @@ const generalController = {
 
       // Delete the file from the filesystem
       const imgName = image.filename;
-      const fullPath = path.join(__dirname, "/uploads/", filename); // Adjust the path as needed
+      const uploadsPath = path.join(__dirname, "..", "uploads");
+
+      const fullPath = path.join(uploadsPath, filename);
       await fs.unlink(fullPath);
 
       // Delete the database record

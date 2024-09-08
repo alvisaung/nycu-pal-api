@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      media_gp_url: {
+      banner_urls: {
         type: DataTypes.JSON,
         allowNull: false,
       },
