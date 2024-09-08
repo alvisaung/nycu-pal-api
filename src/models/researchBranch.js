@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       media_url: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: DataTypes.JSON,
+        allowNull: true,
       },
       is_img: {
         type: DataTypes.BOOLEAN,
