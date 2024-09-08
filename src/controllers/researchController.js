@@ -11,7 +11,7 @@ module.exports = {
   },
   async createOrUpdate(req, res) {
     try {
-      const { id, statement, media_url, is_img } = req.body;
+      const { id, statement, media_url, is_img, youtube_embed_url } = req.body;
       let research;
       if (id) {
         research = await Research.findByPk(id);
@@ -20,6 +20,7 @@ module.exports = {
         statement: statement,
         media_url: media_url,
         is_img: is_img,
+        youtube_embed_url: youtube_embed_url,
       };
       if (research) {
         await research.update(data);

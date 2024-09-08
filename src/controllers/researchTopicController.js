@@ -93,7 +93,7 @@ module.exports = {
     }
   },
   async createOrUpdateBranch(body) {
-    const { title, description, media_url, is_img, topic_id, id } = body;
+    const { title, description, media_url, is_img, topic_id, id, youtube_embed_url } = body;
 
     const data = {
       title: title,
@@ -101,6 +101,7 @@ module.exports = {
       media_url: media_url,
       is_img: is_img,
       ResearchTopicId: topic_id,
+      youtube_embed_url: youtube_embed_url,
     };
     let branch;
     try {
