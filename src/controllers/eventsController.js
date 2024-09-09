@@ -20,7 +20,7 @@ const eventsController = {
   },
   async createOrUpdate(req, res) {
     try {
-      const { id, title, desc, img_url, event_type_id, youtube_embed_url } = req.body;
+      const { id, title, desc, img_url, event_type_id, youtube_embed_url, event_date } = req.body;
       const eventType = await EventsType.findByPk(event_type_id);
       if (!eventType) {
         return res.status(400).json({ error: "Invalid event type" });
@@ -31,23 +31,19 @@ const eventsController = {
         // If ID is provided, try to find the event
         event = await Event.findByPk(id);
       }
+      const data = {
+        title,
+        desc,
+        img_url: img_url,
+        event_type_id,
+        youtube_embed_url: youtube_embed_url,
+        event_date: event_date,
+      };
       if (event) {
         // If event exists, update it
-        await event.update({
-          title,
-          desc,
-          img_url: img_url,
-          event_type_id,
-          youtube_embed_url: youtube_embed_url,
-        });
+        await event.update(data);
       } else {
-        event = await Event.create({
-          title,
-          desc,
-          img_url: img_url,
-          event_type_id,
-          youtube_embed_url: youtube_embed_url,
-        });
+        event = await Event.create(data);
         created = true;
       }
       res.status(created ? 201 : 200).json(event);
