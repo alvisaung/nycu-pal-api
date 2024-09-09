@@ -3,6 +3,7 @@ const path = require("path");
 const { Image } = require("../models");
 const fs = require("fs").promises;
 const storage = multer.memoryStorage();
+const sharp = require("sharp");
 
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
