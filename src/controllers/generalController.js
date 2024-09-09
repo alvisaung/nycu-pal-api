@@ -60,7 +60,7 @@ const generalController = {
     try {
       let finalBuffer = file.buffer;
 
-      if (file.size > 2 * 1024 * 1024) {
+      if (file.size > 1 * 1024 * 1024) {
         // If file is larger than 2MB
         finalBuffer = await compressImage(file.buffer, file.mimetype);
       }
