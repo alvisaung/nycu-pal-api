@@ -2,16 +2,33 @@ const multer = require("multer");
 const path = require("path");
 const { Image } = require("../models");
 const fs = require("fs").promises;
+const storage = multer.memoryStorage();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "src/uploads/"); // Make sure this folder exists
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "src/uploads/"); // Make sure this folder exists
+//   },
+//   filename: (req, file, cb) => {
+//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
+//   },
+// });
+const compressImage = async (buffer, mimetype) => {
+  let sharpInstance = sharp(buffer);
+
+  if (mimetype === "image/png") {
+    sharpInstance = sharpInstance.png({ quality: 70 });
+  } else if (mimetype === "image/webp") {
+    sharpInstance = sharpInstance.webp({ quality: 70 });
+  } else {
+    sharpInstance = sharpInstance.jpeg({ quality: 70 });
+  }
+
+  const compressedImageBuffer = await sharpInstance.resize(1920, 1080, { fit: "inside", withoutEnlargement: true }).toBuffer();
+
+  return compressedImageBuffer;
+};
+
 const upload = multer({
   storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 },
@@ -32,23 +49,38 @@ const generalController = {
     if (!req.file) {
       return res.status(400).send("No files uploaded.");
     }
-    const uploadedImages = [];
     const baseUrl = "https://api.nycu-pal.com/api";
     const file = req.file;
-    const relativePath = path.join("uploads", file.filename).replace(/\\/g, "/");
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const filename = file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname);
+    const relativePath = path.join("uploads", filename).replace(/\\/g, "/");
+    const fullPath = path.join(__dirname, "../", relativePath);
     const fullUrl = `${baseUrl}/${relativePath}`;
+    try {
+      let finalBuffer = file.buffer;
 
-    const image = await Image.create({
-      filename: file.filename,
-      url: fullUrl,
-      mimetype: file.mimetype,
-      size: file.size,
-    });
+      if (file.size > 2 * 1024 * 1024) {
+        // If file is larger than 2MB
+        finalBuffer = await compressImage(file.buffer, file.mimetype);
+      }
 
-    res.status(201).json({
-      message: "Image uploaded successfully",
-      image: image,
-    });
+      await fs.writeFile(fullPath, finalBuffer);
+
+      const image = await Image.create({
+        filename: filename,
+        url: fullUrl,
+        mimetype: file.mimetype,
+        size: finalBuffer.length,
+      });
+
+      res.status(201).json({
+        message: "Image uploaded successfully",
+        image: image,
+      });
+    } catch (error) {
+      console.error("Error processing image:", error);
+      res.status(500).json({ message: "Error processing image", error: error.message });
+    }
   },
 
   async deleteImg(req, res) {
