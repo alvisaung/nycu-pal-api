@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       desc: DataTypes.TEXT,
       youtube_embed_url: DataTypes.TEXT,
+      event_date: { type: DataTypes.DATE, allowNull: true },
     },
     {
       tableName: "events",
