@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "events",
+      tableName: "admin",
       timestamps: true,
     }
   );
