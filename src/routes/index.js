@@ -15,6 +15,9 @@ const upload = multer().none();
 
 router.use("/about-lab", upload, aboutLabRoutes);
 router.post("/admin", upload, generalUtil.generalController.adminLogin);
+router.get("/admin", async (req, res) => {
+  res.status(200).json({});
+});
 router.route("/events").get(eventsController.get).put(eventsController.createOrUpdate).delete(upload, eventsController.delete);
 router.route("/events-type").get(eventTypeController.get).put(upload, eventTypeController.createOrUpdate).delete(upload, eventTypeController.delete);
 router.route("/member").get(memberController.get).put(upload, memberController.createOrUpdate).delete(upload, memberController.delete);
