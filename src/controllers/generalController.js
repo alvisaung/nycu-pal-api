@@ -1,9 +1,10 @@
 const multer = require("multer");
 const path = require("path");
-const { Image } = require("../models");
+const { Image, Admin } = require("../models");
 const fs = require("fs").promises;
 const storage = multer.memoryStorage();
 const sharp = require("sharp");
+import jwt from "jsonwebtoken";
 
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
@@ -46,6 +47,26 @@ const upload = multer({
 });
 
 const generalController = {
+  async adminLogin(req, res) {
+    try {
+      const { email, password } = req.body;
+      const admin = await Admin.findOne({ where: { email } });
+
+      if (!admin) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+      const isPasswordValid = password == admin.password;
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+      const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+      res.status(200).json({ message: "Login successful", token });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
   async uploadImg(req, res) {
     if (!req.file) {
       return res.status(400).send("No files uploaded.");

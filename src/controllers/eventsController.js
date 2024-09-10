@@ -9,7 +9,7 @@ const eventsController = {
       if (id) {
         allEvents = await Event.findByPk(id, { include: EventsType });
       } else {
-        allEvents = await Event.findAll({ limit, include: EventsType, order: [["createdAt", "DESC"]] });
+        allEvents = await Event.findAll({ limit, include: EventsType, order: [["event_date", "DESC"]] });
         allEvents = allEvents.map((event) => ({ ...event.get({ plain: true }), type: event?.EventsType.title }));
       }
 
@@ -48,7 +48,6 @@ const eventsController = {
       }
       res.status(created ? 201 : 200).json(event);
     } catch (error) {
-      console.log(error.sqlMessage);
       res.status(400).json({ error: error.message });
     }
   },
