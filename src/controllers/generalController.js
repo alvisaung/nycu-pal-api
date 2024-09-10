@@ -47,6 +47,26 @@ const upload = multer({
 });
 
 const generalController = {
+  async validateToken(req, res) {
+    if (req.method !== "POST") {
+      return res.status(405).end();
+    }
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    try {
+      const decoded = jwt.verify(token, "secret");
+      // You can add additional checks here, e.g., checking if the user still exists in the database
+      res.status(200).json({ valid: true, user: decoded });
+    } catch (error) {
+      res.status(401).json({ message: "Invalid token" });
+    }
+  },
   async adminLogin(req, res) {
     try {
       const { email, password } = req.body;
