@@ -50,7 +50,7 @@ const generalController = {
   async adminLogin(req, res) {
     try {
       const { email, password } = req.body;
-      const admin = await Admin.findOne({ where: { email } });
+      const admin = await Admin.findOne({ where: { email: email } });
 
       if (!admin) {
         return res.status(401).json({ message: "Invalid email or password" });
@@ -59,7 +59,7 @@ const generalController = {
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
-      const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+      const token = jwt.sign({ id: admin.id, email: admin.email }, "secret", { expiresIn: "1000h" });
 
       res.status(200).json({ message: "Login successful", token });
     } catch (error) {
