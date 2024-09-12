@@ -10,7 +10,10 @@ const paperTypeController = {
           attributes: ["publish_yr"],
           duplicating: false,
         },
-        order: [["id", "ASC"]],
+        order: [
+          [Publication, "publish_yr", "DESC"],
+          ["id", "ASC"],
+        ],
       });
       paperType = paperType.map((group) => group.toJSON());
 
