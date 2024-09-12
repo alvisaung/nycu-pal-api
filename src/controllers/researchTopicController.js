@@ -63,7 +63,8 @@ module.exports = {
         topic = await ResearchTopic.create(data);
       }
       let hasErr;
-      for (let i = 0; i < ResearchBranches.length; i++) {
+      const researchBranch = ResearchBranches ? ResearchBranches.length.length : 0;
+      for (let i = 0; i < researchBranch; i++) {
         const branch = ResearchBranches[i];
         try {
           await createOrUpdateBranch({ ...branch, topic_id: topic.id });
