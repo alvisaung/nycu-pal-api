@@ -63,7 +63,7 @@ module.exports = {
         topic = await ResearchTopic.create(data);
       }
       let hasErr;
-      const researchBranch = ResearchBranches ? ResearchBranches.length.length : 0;
+      const researchBranch = ResearchBranches ? ResearchBranches.length : 0;
       for (let i = 0; i < researchBranch; i++) {
         const branch = ResearchBranches[i];
         try {
