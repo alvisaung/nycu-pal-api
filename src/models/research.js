@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         get() {
           const rawValue = this.getDataValue("media_url");
-          return rawValue ? JSON.parse(rawValue) : null;
+          return rawValue;
         },
       },
       is_img: {
