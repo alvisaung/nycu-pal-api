@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       media_url: {
         type: DataTypes.JSON,
         allowNull: true,
+        get() {
+          const rawValue = this.getDataValue("media_url");
+          return rawValue ? JSON.parse(rawValue) : null;
+        },
       },
       is_img: {
         type: DataTypes.BOOLEAN,
