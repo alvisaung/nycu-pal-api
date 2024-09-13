@@ -18,16 +18,9 @@ module.exports = (sequelize, DataTypes) => {
           const rawValue = this.getDataValue("banner_urls");
           if (!rawValue) return null;
 
-          try {
-            const parsed = JSON.parse(rawValue);
-            if (Array.isArray(parsed)) {
-              return parsed.map((url) => ({ url }));
-            }
-            return parsed;
-          } catch (error) {
-            console.error("Error parsing banner_urls:", error);
-            return null;
-          }
+          const parsed = JSON.parse(rawValue);
+
+          return parsed;
         },
       },
       mobile: {
