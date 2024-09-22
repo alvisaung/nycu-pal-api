@@ -2,20 +2,39 @@ const { Event, EventsType } = require("../models");
 
 const eventsController = {
   async get(req, res) {
-    const { id } = req.query;
+    const { id, topic_id } = req.query;
     const limit = req.query.q ? parseInt(req.query.q, 10) : undefined;
+
     try {
       let allEvents;
+
       if (id) {
         allEvents = await Event.findByPk(id, { include: EventsType });
       } else {
-        allEvents = await Event.findAll({ limit, include: EventsType, order: [["event_date", "DESC"]] });
-        allEvents = allEvents.map((event) => ({ ...event.get({ plain: true }), type: event?.EventsType.title }));
+        const queryOptions = {
+          limit,
+          include: [
+            {
+              model: EventsType,
+              required: !!topic_id, // Make it an inner join if topic_id is provided
+              where: topic_id ? { id: topic_id } : {},
+            },
+          ],
+          order: [["event_date", "DESC"]],
+        };
+
+        allEvents = await Event.findAll(queryOptions);
+
+        allEvents = allEvents.map((event) => ({
+          ...event.get({ plain: true }),
+          type: event?.EventsType?.title,
+        }));
       }
 
       return res.json(allEvents);
     } catch (err) {
-      return res.status(500).json(err);
+      console.error("Error fetching events:", err);
+      return res.status(500).json({ error: "Internal server error" });
     }
   },
   async createOrUpdate(req, res) {
