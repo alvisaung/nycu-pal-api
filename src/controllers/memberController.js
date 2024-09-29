@@ -1,5 +1,27 @@
 const { Member } = require("../models");
 const memberController = {
+  async swapMemberIds(req, res) {
+    const { swap_to, swap_from } = req.body;
+    try {
+      // Find the members by their ids
+      const memberTo = await Member.findByPk(swap_to);
+      const memberFrom = await Member.findByPk(swap_from);
+
+      if (!memberTo || !memberFrom) {
+        return res.status(404).json({ error: "Member not found" });
+      }
+
+      // Swap the ids by swapping the properties except id (IDs can't be changed directly in DB)
+      const tempMember = { ...memberTo.get(), id: memberFrom.id };
+      await memberTo.update({ ...memberFrom.get(), id: memberTo.id });
+      await memberFrom.update({ ...tempMember });
+
+      res.status(200).json({ message: "Members swapped successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while swapping members" });
+    }
+  },
   async get(req, res) {
     try {
       const members = await Member.findAll();
