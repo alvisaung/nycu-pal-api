@@ -1,20 +1,49 @@
 const { Member } = require("../models");
 const memberController = {
   async swapMemberIds(req, res) {
-    const { swap_to, swap_from } = req.body;
-    try {
-      // Find the members by their ids
-      const memberTo = await Member.findByPk(swap_to);
-      const memberFrom = await Member.findByPk(swap_from);
+    const { member_id, swipe_type } = req.body;
 
-      if (!memberTo || !memberFrom) {
+    try {
+      // Step 1: Find the current member by ID
+      const currentMember = await Member.findByPk(member_id);
+
+      if (!currentMember) {
         return res.status(404).json({ error: "Member not found" });
       }
 
-      // Swap the ids by swapping the properties except id (IDs can't be changed directly in DB)
-      const tempMember = { ...memberTo.get(), id: memberFrom.id };
-      await memberTo.update({ ...memberFrom.get(), id: memberTo.id });
-      await memberFrom.update({ ...tempMember });
+      const role = currentMember.role;
+
+      // Step 2: Find the adjacent member based on the swipe direction and role
+      let adjacentMember;
+
+      if (swipe_type === "left") {
+        // Find the member with the same role, ordered by id in descending order, that comes before the current member
+        adjacentMember = await Member.findOne({
+          where: {
+            role: role,
+            id: { [Sequelize.Op.lt]: currentMember.id }, // Less than the current member's ID
+          },
+          order: [["id", "DESC"]], // Get the closest one before the current member
+        });
+      } else if (swipe_type === "right") {
+        // Find the member with the same role, ordered by id in ascending order, that comes after the current member
+        adjacentMember = await Member.findOne({
+          where: {
+            role: role,
+            id: { [Sequelize.Op.gt]: currentMember.id }, // Greater than the current member's ID
+          },
+          order: [["id", "ASC"]], // Get the closest one after the current member
+        });
+      }
+
+      if (!adjacentMember) {
+        return res.status(400).json({ error: `No adjacent member found to swap ${swipe_type}.` });
+      }
+
+      // Step 3: Swap the properties between the current member and adjacent member (excluding id)
+      const tempMember = { ...currentMember.get() };
+      await currentMember.update({ ...adjacentMember.get(), id: currentMember.id });
+      await adjacentMember.update({ ...tempMember, id: adjacentMember.id });
 
       res.status(200).json({ message: "Members swapped successfully" });
     } catch (error) {
