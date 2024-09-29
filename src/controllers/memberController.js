@@ -1,4 +1,4 @@
-const { Member } = require("../models");
+const { Member, Sequelize } = require("../models");
 const memberController = {
   async swapMemberIds(req, res) {
     const { member_id, swipe_type } = req.body;
