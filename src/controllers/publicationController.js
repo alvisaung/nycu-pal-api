@@ -42,7 +42,7 @@ const publicationController = {
 
   async createOrUpdate(req, res) {
     try {
-      const { id, title, author, img_url, PublicationTypeId, publish_yr, conference_name } = req.body;
+      const { id, title, author, img_url, PublicationTypeId, publish_yr, conference_name, url } = req.body;
 
       const paperType = await PublicationType.findByPk(PublicationTypeId);
       if (!paperType) {
@@ -61,6 +61,7 @@ const publicationController = {
         PublicationTypeId,
         publish_yr,
         conference_name,
+        url,
       };
       if (paper) {
         // If event exists, update it

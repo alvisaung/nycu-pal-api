@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       conference_name: DataTypes.STRING,
+      url: DataTypes.STRING,
       publish_yr: DataTypes.INTEGER,
     },
     {
