@@ -1,4 +1,4 @@
-const { Member, Sequelize } = require("../models");
+const { Member, Sequelize, MemberType } = require("../models");
 const memberController = {
   async swapMemberIds(req, res) {
     const { member_id, swipe_type } = req.body;
@@ -53,13 +53,17 @@ const memberController = {
   },
   async get(req, res) {
     try {
-      const members = await Member.findAll();
+      const members = await Member.findAll({
+        include: MemberType,
+        attributes: ["id", "title"], // Including only necessary fields from MemberType
+      });
+
       const memberGroups = members.reduce((acc, member) => {
-        const group = acc.find((g) => g.role === member.role);
+        const group = acc.find((g) => g.MemberTypeId === member.MemberTypeId);
         if (group) {
           group.members_list.push(member);
         } else {
-          acc.push({ role: member.role, members_list: [member] });
+          acc.push({ MemberTypeId: member.MemberTypeId, role: member.MemberType.title, members_list: [member] });
         }
         return acc;
       }, []);
