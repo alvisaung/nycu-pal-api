@@ -70,7 +70,7 @@ const memberController = {
   },
   async createOrUpdate(req, res) {
     try {
-      const { id, name, research_dir, email, img_url, experiences, phone, role } = req.body;
+      const { id, name, research_dir, email, img_url, experiences, phone, role_id } = req.body;
       let member;
       let created = false;
 
