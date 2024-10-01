@@ -3,7 +3,9 @@ const { MemberType, Member } = require("../models");
 const paperTypeController = {
   async get(req, res) {
     try {
-      let memberType = await MemberType.findAll();
+      let memberType = await MemberType.findAll({
+        order: [["id", "ASC"]],
+      });
 
       return res.json(memberType);
     } catch (err) {
