@@ -11,7 +11,7 @@ const memberController = {
         return res.status(404).json({ error: "Member not found" });
       }
 
-      const role = currentMember.role;
+      const role_id = currentMember.MemberTypeId;
 
       // Step 2: Find the adjacent member based on the swipe direction and role
       let adjacentMember;
@@ -20,7 +20,7 @@ const memberController = {
         // Find the member with the same role, ordered by id in descending order, that comes before the current member
         adjacentMember = await Member.findOne({
           where: {
-            role: role,
+            MemberTypeId: role_id,
             id: { [Sequelize.Op.lt]: currentMember.id }, // Less than the current member's ID
           },
           order: [["id", "DESC"]], // Get the closest one before the current member
@@ -29,7 +29,7 @@ const memberController = {
         // Find the member with the same role, ordered by id in ascending order, that comes after the current member
         adjacentMember = await Member.findOne({
           where: {
-            role: role,
+            MemberTypeId: role_id,
             id: { [Sequelize.Op.gt]: currentMember.id }, // Greater than the current member's ID
           },
           order: [["id", "ASC"]], // Get the closest one after the current member
