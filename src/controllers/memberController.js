@@ -57,16 +57,16 @@ const memberController = {
         include: MemberType,
       });
 
-      // const memberGroups = members.reduce((acc, member) => {
-      //   const group = acc.find((g) => g.MemberTypeId === member.MemberTypeId);
-      //   if (group) {
-      //     group.members_list.push(member);
-      //   } else {
-      //     acc.push({ MemberTypeId: member.MemberTypeId, role: member.MemberType.title, members_list: [member] });
-      //   }
-      //   return acc;
-      // }, []);
-      res.json(members);
+      const memberGroups = members.reduce((acc, member) => {
+        const group = acc.find((g) => g.MemberTypeId === member.MemberTypeId);
+        if (group) {
+          group.members_list.push(member);
+        } else {
+          acc.push({ MemberTypeId: member.MemberTypeId, role: member.MemberType ? member.MemberType.title : null, members_list: [member] });
+        }
+        return acc;
+      }, []);
+      res.json(memberGroups);
     } catch (err) {
       res.status(500).json({ err: err.message });
     }
