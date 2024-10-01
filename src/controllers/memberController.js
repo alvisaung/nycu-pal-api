@@ -55,7 +55,6 @@ const memberController = {
     try {
       const members = await Member.findAll({
         include: MemberType,
-        attributes: ["id", "title"], // Including only necessary fields from MemberType
       });
 
       const memberGroups = members.reduce((acc, member) => {
