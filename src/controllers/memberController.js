@@ -84,7 +84,8 @@ const memberController = {
         img_url: img_url,
         experiences: experiences,
         phone: phone,
-        role: role,
+        // role: role,
+        MemberTypeId: role_id,
       };
       if (member) {
         await member.update(data);
