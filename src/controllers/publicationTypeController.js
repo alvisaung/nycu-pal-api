@@ -1,5 +1,4 @@
 const { PublicationType, Publication } = require("../models");
-const { fn, col, literal } = require("sequelize");
 
 const paperTypeController = {
   async get(req, res) {

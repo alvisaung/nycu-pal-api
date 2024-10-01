@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
       indexes: [{ fields: ["id"] }],
     }
   );
+  Member.associate = (models) => {
+    Member.belongsTo(models.MemberType, { foreignKey: "MemberTypeId" });
+  };
 
   return Member;
 };
