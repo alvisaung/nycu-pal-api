@@ -35,6 +35,14 @@ const createOrUpdateBranch = async (body) => {
 module.exports = {
   async get(req, res) {
     try {
+      const { id } = req.query;
+      if (id) {
+        const researchTopic = await ResearchTopic.findOne({ where: { id } });
+        if (!researchTopic) {
+          return res.status(404).json({ message: "Research topic not found" });
+        }
+        return res.json(researchTopic);
+      }
       const research = await ResearchTopic.findAll({ include: ResearchBranch });
       res.json(research);
     } catch (err) {
