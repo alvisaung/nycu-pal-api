@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       experiences: DataTypes.TEXT,
       phone: DataTypes.STRING,
       role: DataTypes.STRING,
+      graduate_paper: DataTypes.STRING,
     },
     {
       tableName: "member",
