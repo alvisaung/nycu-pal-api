@@ -73,7 +73,7 @@ const memberController = {
   },
   async createOrUpdate(req, res) {
     try {
-      const { id, name, research_dir, email, img_url, experiences, phone, role_id, graduate_paper, role } = req.body;
+      const { id, name, research_dir, email, img_url, experiences, phone, role_id, graduate_paper, is_graduated } = req.body;
       let member;
       let created = false;
 
@@ -88,7 +88,7 @@ const memberController = {
         img_url: img_url,
         experiences: experiences,
         phone: phone,
-        role: role,
+        is_graduated: is_graduated,
         MemberTypeId: role_id,
       };
       if (member) {
