@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
           // Parse JSON string if MariaDB stores it as a string
           return typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
         },
-        set(value) {
-          // Ensure value is stored as a JSON string
-          this.setDataValue("img_url", JSON.stringify(value));
-        },
       },
       title: {
         type: DataTypes.STRING,
