@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         set(value) {
           // Ensure value is stored as a JSON string
-          this.setDataValue("banner_urls", JSON.stringify(value));
+          this.setDataValue("banner_urls", value);
         },
       },
       mobile: {
