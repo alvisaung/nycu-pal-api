@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
           // Parse JSON string if MariaDB stores it as a string
           return typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
         },
+        set(value) {
+          // Ensure value is stored as a JSON string
+          this.setDataValue("banner_urls", value);
+        },
       },
       mobile: {
         type: DataTypes.STRING,
