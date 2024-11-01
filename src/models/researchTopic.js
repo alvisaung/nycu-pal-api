@@ -18,6 +18,15 @@ module.exports = (sequelize, DataTypes) => {
       media_url: {
         type: DataTypes.JSON,
         allowNull: true,
+        get() {
+          const rawValue = this.getDataValue("media_url");
+          // Parse JSON string if MariaDB stores it as a string
+          return typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
+        },
+        set(value) {
+          // Ensure value is stored as a JSON string
+          this.setDataValue("media_url", JSON.stringify(value));
+        },
       },
       is_img: {
         type: DataTypes.BOOLEAN,
